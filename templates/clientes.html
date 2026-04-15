@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between mb-3">
+    <h2>Clientes</h2>
+    <a href="{{ url_for('cliente_novo') }}" class="btn btn-dark">+ Novo Cliente</a>
+</div>
+
+<table class="table table-bordered bg-white">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Telefone</th>
+            <th>Email</th>
+            <th>Cidade</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for c in clientes %}
+        <tr>
+<th>Ações</th>
+<td>
+    <a href="{{ url_for('cliente_editar', cliente_id=c.id) }}" class="btn btn-sm btn-outline-dark">Editar</a>
+
+    <form method="POST" action="{{ url_for('cliente_excluir', cliente_id=c.id) }}" style="display:inline;">
+        <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Excluir cliente?')">Excluir</button>
+    </form>
+</td>
+            <td>{{ c.nome }}</td>
+            <td>{{ c.telefone or '-' }}</td>
+            <td>{{ c.email or '-' }}</td>
+            <td>{{ c.cidade or '-' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

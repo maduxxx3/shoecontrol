@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Vendas</h2>
+        <p class="text-muted mb-0">Controle e histórico de vendas</p>
+    </div>
+    <a href="{{ url_for('venda_nova') }}" class="btn btn-dark">+ Nova Venda</a>
+</div>
+
+<div class="page-card mb-4">
+    <div class="mb-3">
+        <form method="GET" class="d-flex gap-2">
+            <input type="text" name="busca" class="form-control" placeholder="Buscar por produto..." value="{{ busca }}">
+            <button class="btn btn-dark">Buscar</button>
+        </form>
+    </div>
+
+    <form method="GET" class="row g-3">
+        <div class="col-md-4">
+            <label class="form-label">Data inicial</label>
+            <input type="date" name="data_inicio" class="form-control" value="{{ data_inicio or '' }}">
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Data final</label>
+            <input type="date" name="data_fim" class="form-control" value="{{ data_fim or '' }}">
+        </div>
+
+        <div class="col-md-4 d-flex align-items-end gap-2">
+            <button type="submit" class="btn btn-dark w-100">Filtrar</button>
+            <a href="{{ url_for('vendas') }}" class="btn btn-outline-secondary w-100">Limpar</a>
+        </div>
+    </form>
+</div>
+
+<div class="page-card">
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Cliente</th>
+                    <th>Qtd</th>
+                    <th>Valor Unit.</th>
+                    <th>Total</th>
+                    <th>Lucro</th>
+                    <th>Pagamento</th>
+                    <th>Data</th>
+                    <th width="120">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for v in vendas %}
+                <tr>
+                    <td>{{ v.produto.nome }}</td>
+                    <td>{{ v.cliente.nome if v.cliente else '-' }}</td>
+                    <td>{{ v.quantidade }}</td>
+                    <td>{{ v.valor_unitario | brl }}</td>
+                    <td>{{ v.valor_total | brl }}</td>
+                    <td>{{ v.lucro | brl }}</td>
+                    <td>{{ v.forma_pagamento or '-' }}</td>
+                    <td>{{ v.data_venda.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('venda_excluir', venda_id=v.id) }}" onsubmit="return confirm('Deseja excluir esta venda? O estoque será devolvido.')" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="9" class="text-center">Nenhuma venda encontrada.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

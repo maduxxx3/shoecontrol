@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form method="GET" class="mb-3 d-flex">
+    <input type="text" name="busca" class="form-control me-2" placeholder="Buscar produto..." value="{{ busca }}">
+    <button class="btn btn-dark">Buscar</button>
+</form>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Produtos</h2>
+        <p class="text-muted mb-0">Gerencie os produtos da loja</p>
+    </div>
+    <a href="{{ url_for('produto_novo') }}" class="btn btn-dark">+ Novo Produto</a>
+</div>
+
+<div class="page-card">
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Marca</th>
+                    <th>Categoria</th>
+                    <th>Qtd</th>
+                    <th>Venda</th>
+                    <th width="220">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in produtos %}
+                <tr>
+                    <td>{{ p.nome }}</td>
+                    <td>{{ p.marca or '-' }}</td>
+                    <td>{{ p.categoria or '-' }}</td>
+                    <td>
+    {% if p.quantidade == 0 %}
+        <span class="badge bg-danger">0</span>
+    {% elif p.quantidade <= 3 %}
+        <span class="badge bg-warning text-dark">{{ p.quantidade }}</span>
+    {% else %}
+        <span class="badge bg-success">{{ p.quantidade }}</span>
+    {% endif %}
+</td>
+                    <td>{{ p.preco_venda | brl }}</td>
+                    <td>
+                        <a href="{{ url_for('produto_editar', produto_id=p.id) }}" class="btn btn-sm btn-outline-dark">Editar</a>
+
+                        <form method="POST" action="{{ url_for('produto_excluir', produto_id=p.id) }}" style="display:inline-block;" onsubmit="return confirm('Deseja excluir este produto?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">Nenhum produto cadastrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

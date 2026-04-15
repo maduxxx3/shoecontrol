@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="mb-4">
+    <h2 class="fw-bold">Relatórios</h2>
+    <p class="text-muted mb-0">Resumo geral do sistema</p>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-label">Total Produtos</div>
+            <div class="metric-value">{{ total_produtos }}</div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-label">Total Clientes</div>
+            <div class="metric-value">{{ total_clientes }}</div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-label">Total Vendas</div>
+            <div class="metric-value">{{ total_vendas }}</div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-label">Faturamento Total</div>
+            <div class="metric-value">{{ faturamento_total | brl }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-label">Lucro Total</div>
+            <div class="metric-value">{{ lucro_total | brl }}</div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-label">Entradas</div>
+            <div class="metric-value">{{ entradas | brl }}</div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-label">Saídas</div>
+            <div class="metric-value">{{ saidas | brl }}</div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-label">Saldo</div>
+            <div class="metric-value">{{ saldo | brl }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-7">
+        <div class="page-card">
+            <h5 class="fw-bold mb-3">Vendas por Produto</h5>
+            <canvas id="graficoRelatorio"></canvas>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="page-card">
+            <h5 class="fw-bold mb-3">Produtos com Estoque Baixo</h5>
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Qtd</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in produtos_baixo %}
+                    <tr>
+                        <td>{{ p.nome }}</td>
+                        <td>{{ p.quantidade }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="2" class="text-center">Nenhum produto com estoque baixo.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+const ctxRelatorio = document.getElementById('graficoRelatorio');
+
+if (ctxRelatorio) {
+    new Chart(ctxRelatorio, {
+        type: 'pie',
+        data: {
+            labels: {{ grafico_labels | tojson }},
+            datasets: [{
+                data: {{ grafico_valores | tojson }}
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-label">Vendas do Dia</div>
+            <div class="metric-value">{{ dados.vendas_dia | brl }}</div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-label">Faturamento do Mês</div>
+            <div class="metric-value">{{ dados.faturamento_mes | brl }}</div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-label">Lucro do Mês</div>
+            <div class="metric-value">{{ dados.lucro_mes | brl }}</div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-label">Estoque Baixo</div>
+            <div class="metric-value">{{ dados.estoque_baixo }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-8">
+        <div class="page-card">
+            <h5 class="fw-bold mb-3">Produtos Mais Vendidos</h5>
+            <canvas id="graficoDashboard"></canvas>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="page-card mb-4">
+            <h5 class="fw-bold mb-3">Estoque Baixo</h5>
+            {% for p in produtos_baixo %}
+                <div class="d-flex justify-content-between border-bottom py-2">
+                    <span>{{ p.nome }}</span>
+                    <strong>{{ p.quantidade }}</strong>
+                </div>
+            {% else %}
+                <p class="text-muted mb-0">Nenhum produto com estoque baixo.</p>
+            {% endfor %}
+        </div>
+
+        <div class="page-card">
+            <h5 class="fw-bold mb-3">Vendas Recentes</h5>
+            {% for v in vendas_recentes %}
+                <div class="border-bottom py-2">
+                    <strong>{{ v.produto.nome }}</strong><br>
+                    <small class="text-muted">{{ v.quantidade }} unidade(s) • {{ v.valor_total | brl }}</small><br>
+                    <small class="text-muted">Lucro: {{ v.lucro | brl }}</small>
+                </div>
+            {% else %}
+                <p class="text-muted mb-0">Nenhuma venda registrada.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+const ctxDashboard = document.getElementById('graficoDashboard');
+
+if (ctxDashboard) {
+    new Chart(ctxDashboard, {
+        type: 'bar',
+        data: {
+            labels: {{ grafico_labels | tojson }},
+            datasets: [{
+                label: 'Quantidade vendida',
+                data: {{ grafico_valores | tojson }},
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+}
+</script>
+
+{% endblock %}

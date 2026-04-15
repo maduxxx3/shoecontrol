@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Editar Cliente</h2>
+
+<form method="POST">
+
+    <div class="mb-3">
+        <label>Nome</label>
+        <input type="text" name="nome" class="form-control" value="{{ cliente.nome }}" required>
+    </div>
+
+    <div class="mb-3">
+        <label>Telefone</label>
+        <input type="text" name="telefone" class="form-control" value="{{ cliente.telefone }}">
+    </div>
+
+    <div class="mb-3">
+        <label>Email</label>
+        <input type="email" name="email" class="form-control" value="{{ cliente.email }}">
+    </div>
+
+    <div class="mb-3">
+        <label>Cidade</label>
+        <input type="text" name="cidade" class="form-control" value="{{ cliente.cidade }}">
+    </div>
+
+    <div class="mb-3">
+        <label>Observações</label>
+        <textarea name="observacoes" class="form-control">{{ cliente.observacoes }}</textarea>
+    </div>
+
+    <button class="btn btn-dark">Salvar</button>
+
+</form>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between mb-3">
+    <div>
+        <h2>Estoque</h2>
+        <p class="text-muted mb-0">Visualize as quantidades disponíveis dos produtos</p>
+    </div>
+    <a href="{{ url_for('produto_novo') }}" class="btn btn-dark">+ Novo Produto</a>
+</div>
+
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table table-bordered bg-white align-middle">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Marca</th>
+                    <th>Categoria</th>
+                    <th>Tamanho</th>
+                    <th>Cor</th>
+                    <th>Quantidade</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in produtos %}
+                <tr>
+                    <td>{{ p.nome }}</td>
+                    <td>{{ p.marca or '-' }}</td>
+                    <td>{{ p.categoria or '-' }}</td>
+                    <td>{{ p.tamanho or '-' }}</td>
+                    <td>{{ p.cor or '-' }}</td>
+                    <td>{{ p.quantidade }}</td>
+                    <td>
+                        {% if p.quantidade == 0 %}
+                            <span class="badge bg-danger">Sem estoque</span>
+                        {% elif p.quantidade <= 3 %}
+                            <span class="badge bg-warning text-dark">Estoque baixo</span>
+                        {% else %}
+                            <span class="badge bg-success">Disponível</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="text-center">Nenhum produto cadastrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

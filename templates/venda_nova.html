@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Nova Venda</h2>
+
+<form method="POST">
+
+    <div class="mb-3">
+        <label>Produto</label>
+        <select name="produto_id" class="form-control" required>
+            <option value="">Selecione</option>
+            {% for p in produtos %}
+            <option value="{{ p.id }}">{{ p.nome }} (Estoque: {{ p.quantidade }})</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Cliente</label>
+        <select name="cliente_id" class="form-control">
+            <option value="">Sem cliente</option>
+            {% for c in clientes %}
+            <option value="{{ c.id }}">{{ c.nome }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Quantidade</label>
+        <input type="number" name="quantidade" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label>Forma de pagamento</label>
+        <select name="forma_pagamento" class="form-control">
+            <option>Dinheiro</option>
+            <option>Pix</option>
+            <option>Cartão</option>
+        </select>
+    </div>
+
+    <button class="btn btn-dark">Finalizar Venda</button>
+
+</form>
+
+{% endblock %}
